@@ -17,6 +17,16 @@ const getAllPost = async (req: Request, res: Response) =>
     }
 }
 
+const createPost = async (req: Request, res: Response) => {
+    try {
+        const addPost = await postService.addpost(req.user,req.body);
+        res.status(200).json({status:"Succes",message:"Post created.",post:addPost})
+    } catch (err) {
+        res.status(500).json({ status: "Fail", message: `Internal server error. Error: ${err}` })
+    }
+}
+
 export const postController = {
-    getAllPost
+    getAllPost,
+    createPost
 }

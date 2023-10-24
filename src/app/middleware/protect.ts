@@ -1,9 +1,11 @@
 import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken"
-import { PrismaClient, User } from '@prisma/client'
-
+import { PrismaClient} from '@prisma/client'
+type jwtTest = jwt.JwtPayload | {
+    id:string
+}
 const prisma = new PrismaClient()
-module.exports = async (req: Request, res: Response, next: NextFunction) =>
+const middleware = async (req: Request, res: Response, next: NextFunction) =>
 {
     try
     {
@@ -16,31 +18,33 @@ module.exports = async (req: Request, res: Response, next: NextFunction) =>
         // Extract the token from the authorization header
         const authHeader = req.headers["authorization"];
         const bearerToken = authHeader.split(" ");
-        const token = authHeader; //bearerToken[1];
+        const token = bearerToken[1];
 
-        // Verify the token using the JWT_SECRET from environment variables
-        jwt.verify(token, process.env.JWT_SECRET, async (err, payload:User) =>
+        try
         {
-            if (err)
+            console.log(process.env.JWT_SECRET as string);
+            // Verify the token using the JWT_SECRET from environment variables
+            let decodedToken = jwt.verify(token, process.env.JWT_SECRET as string);
+            const verifyUser = decodedToken as jwtTest;
+            if (verifyUser && 'id' in verifyUser)
             {
-                return res.status(401).json({ message: "Unauthorized" });
+                // Fetch the user from the database using the decoded token
+                const user = await prisma.user.findUnique({ where: { id: verifyUser.id } });
+    
+                // Attach the user to the request object
+                req.user = user;
             }
 
-            // Fetch the user details from the database based on the payload
-            req.user = await prisma.user.findUnique({ where:{
-                id:payload.id
-            }});
-
-            // Check if the user exists
-            if (!req.user)
-            {
-                return next("user not found");
-            }
-
-            next(); // Continue to the next middleware
-        })
+            next();
+        } catch (err)
+        {
+            // Handle errors from jwt.verify
+            return res.status(401).json({ message: "Unauthorized" });
+        }
     } catch (err)
     {
         next(err);
     }
 }
+
+export const protect = middleware;
