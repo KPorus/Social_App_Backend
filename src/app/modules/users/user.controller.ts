@@ -20,7 +20,7 @@ const login =async (req:Request,res:Response) => {
             return res.status(404).json({status:"Fail", message:"user not found"})   
         }
     } catch (err) {
-        res.status(500).json({message:err})
+        res.status(500).json({ status: "Fail", message: `Internal server error. Error: ${err}` })
     }
 }
 
@@ -35,7 +35,7 @@ const register = async (req: Request, res: Response) => {
             return res.status(404).json({ status: "succes", message: "User not registered" })
         }
     } catch (err) {
-        res.status(500).json({ message: err })
+        res.status(500).json({ status: "Fail", message: `Internal server error. Error: ${err}` })
     }
 }
 export const userController ={
