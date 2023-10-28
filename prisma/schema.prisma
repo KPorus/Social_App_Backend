@@ -14,7 +14,7 @@ model User {
   pass    String
   address String
   post    Post[]
-  Comment Comment[]
+  comment Comment[]
 
   @@map("users")
 }
@@ -28,7 +28,7 @@ model Post {
   userId      String
   like        String[]
   user        User      @relation(fields: [userId], references: [id])
-  Review      Comment[]
+  comment      Comment[]
 
   @@map("posts")
 }

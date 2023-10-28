@@ -15,7 +15,7 @@ CREATE TABLE "posts" (
     "title" TEXT NOT NULL,
     "description" TEXT NOT NULL,
     "createAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updateAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updateAt" TIMESTAMP(3) NOT NULL,
     "userId" TEXT NOT NULL,
     "like" TEXT[],
 
@@ -23,12 +23,13 @@ CREATE TABLE "posts" (
 );
 
 -- CreateTable
-CREATE TABLE "reviews" (
+CREATE TABLE "comments" (
     "id" TEXT NOT NULL,
     "description" TEXT NOT NULL,
     "postId" TEXT NOT NULL,
+    "userId" TEXT NOT NULL,
 
-    CONSTRAINT "reviews_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "comments_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateIndex
@@ -38,4 +39,7 @@ CREATE UNIQUE INDEX "users_email_key" ON "users"("email");
 ALTER TABLE "posts" ADD CONSTRAINT "posts_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "reviews" ADD CONSTRAINT "reviews_postId_fkey" FOREIGN KEY ("postId") REFERENCES "posts"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "comments" ADD CONSTRAINT "comments_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "comments" ADD CONSTRAINT "comments_postId_fkey" FOREIGN KEY ("postId") REFERENCES "posts"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
