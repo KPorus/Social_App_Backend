@@ -27,16 +27,16 @@ model Post {
   userId      String  
   like        String[]
   user        User     @relation(fields: [userId], references: [id])
-  Review      Review[]
+  Review      Comment[]
 
   @@map("posts")
 }
 
-model Review {
+model Comment {
   id          String @id @default(uuid())
   description String
   postId      String
   post        Post   @relation(fields: [postId], references: [id])
 
-  @@map("reviews")
+  @@map("comments")
 }
