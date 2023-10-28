@@ -22,7 +22,6 @@ const middleware = async (req: Request, res: Response, next: NextFunction) =>
 
         try
         {
-            console.log(process.env.JWT_SECRET as string);
             // Verify the token using the JWT_SECRET from environment variables
             let decodedToken = jwt.verify(token, process.env.JWT_SECRET as string);
             const verifyUser = decodedToken as jwtTest;

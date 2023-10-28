@@ -26,7 +26,39 @@ const createPost = async (req: Request, res: Response) => {
     }
 }
 
+const deletePost =async (req:Request, res:Response) => {
+    try {
+        const deleteUserPost = await postService.deletePost(req.user,req.body);
+        res.status(200).json({ status:"Succes",message:`Post ${req.body.id} deleted succesfully`,deleteUserPost})
+    } catch (err) {
+        res.status(500).json({ status: "Fail", message: `Internal server error. Error: ${err}` })
+    }
+}
+
+const likeDislikePost = async(req:Request,res:Response)=>{
+    try
+    {
+        const likeDislikePost = await postService.likeDislikePost(req.user, req.body);
+        res.status(200).json({ status: "succes", message: `Post ${req.body.id} liked `,likeDislikePost })
+    } catch (err)
+    {
+        res.status(500).json({ status: "Fail", message: `Internal server error. Error: ${err}` })
+    }
+}
+
+const updatePost = async (req: Request, res: Response) => {
+    try {
+        const postUpdate = await postService.updatePost(req.user,req.body);
+        res.status(200).json({ status: "succes", message: `Post ${req.body.id} updated `, postUpdate })
+    } catch (err) {
+        res.status(500).json({ status: "Fail", message: `Internal server error. Error: ${err}` })
+    }
+}
+
 export const postController = {
     getAllPost,
-    createPost
+    createPost,
+    deletePost,
+    updatePost,
+    likeDislikePost
 }

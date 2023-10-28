@@ -24,7 +24,7 @@ model Post {
   description String
   createAt    DateTime @default(now())
   updateAt    DateTime @updatedAt
-  userId      String
+  userId      String  
   like        String[]
   user        User     @relation(fields: [userId], references: [id])
   Review      Review[]
